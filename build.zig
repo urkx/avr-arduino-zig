@@ -4,7 +4,7 @@ const Builder = std.Build.Builder;
 pub fn build(b: *Builder) !void {
     const uno = std.zig.CrossTarget{
         .cpu_arch = .avr,
-        .cpu_model = .{ .explicit = &std.Target.avr.cpu.atmega328p },
+        .cpu_model = .{ .explicit = &std.Target.avr.cpu.atmega2560 },
         .os_tag = .freestanding,
         .abi = .none,
     };
@@ -31,14 +31,14 @@ pub fn build(b: *Builder) !void {
         var tmp = std.ArrayList(u8).init(b.allocator);
         try tmp.appendSlice("-Uflash:w:");
         try tmp.appendSlice(bin_path);
-        try tmp.appendSlice(":e");
+        //try tmp.appendSlice(":e");
         break :blk try tmp.toOwnedSlice();
     };
 
     const upload = b.step("upload", "Upload the code to an Arduino device using avrdude");
     const cmd = &[_][]const u8{"avrdude",
-        "-carduino",
-        "-patmega328p",
+        "-cstk500v2",
+        "-pm2560",
         "-D",
         "-P",
         tty,
