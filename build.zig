@@ -31,7 +31,7 @@ pub fn build(b: *Builder) !void {
         var tmp = std.ArrayList(u8).init(b.allocator);
         try tmp.appendSlice("-Uflash:w:");
         try tmp.appendSlice(bin_path);
-        //try tmp.appendSlice(":e");
+        try tmp.appendSlice(":e");
         break :blk try tmp.toOwnedSlice();
     };
 
