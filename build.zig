@@ -1,8 +1,7 @@
 const std = @import("std");
-const Builder = std.Build.Builder;
 
-pub fn build(b: *Builder) !void {
-    const uno = std.zig.CrossTarget{
+pub fn build(b: *std.Build) !void {
+    const uno = std.Target.Query{
         .cpu_arch = .avr,
         .cpu_model = .{ .explicit = &std.Target.avr.cpu.atmega2560 },
         .os_tag = .freestanding,
@@ -11,10 +10,11 @@ pub fn build(b: *Builder) !void {
 
     const exe = b.addExecutable(.{
         .name = "avr-arduino-zig", 
-        .root_source_file = .{ .path = "src/start.zig"},
-        .target = uno,
+        .root_source_file = b.path("src/start.zig"),
+        .target = b.resolveTargetQuery(uno),
         .optimize = b.standardOptimizeOption(.{})});
-    exe.setLinkerScriptPath(std.build.FileSource{ .path = "src/linker.ld" });
+        
+    exe.setLinkerScriptPath(b.path("src/linker.ld"));
     b.installArtifact(exe);
 
     const tty = b.option(
@@ -56,13 +56,13 @@ pub fn build(b: *Builder) !void {
     objdump.dependOn(&avr_objdump.step);
     avr_objdump.step.dependOn(&exe.step);
 
-    const monitor = b.step("monitor", "Opens a monitor to the serial output");
-    const screen = b.addSystemCommand(&.{
-        "screen",
-        tty,
-        "115200",
-    });
-    monitor.dependOn(&screen.step);
+    //const monitor = b.step("monitor", "Opens a monitor to the serial output");
+    //const screen = b.addSystemCommand(&.{
+    //    "screen",
+    //    tty,
+    //    "115200",
+    //});
+    //monitor.dependOn(&screen.step);
 
     b.default_step.dependOn(&exe.step);
 }
