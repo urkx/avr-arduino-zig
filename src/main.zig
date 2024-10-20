@@ -22,8 +22,8 @@ pub fn main() void {
     if (bss_stuff[0] == 0)
         uart.write("Ahh its actually zero!\r\n");
 
-    bss_stuff = "\r\nhello\r\n".*;
-    uart.write(&bss_stuff);
+    // bss_stuff = "\r\nhello\r\n";
+    uart.write("\r\nhello\r\n");
 
     // This will actually call our panic handler in start.zig when
     // uncommented.
