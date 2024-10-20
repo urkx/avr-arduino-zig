@@ -56,13 +56,13 @@ pub fn build(b: *std.Build) !void {
     objdump.dependOn(&avr_objdump.step);
     avr_objdump.step.dependOn(&exe.step);
 
-    //const monitor = b.step("monitor", "Opens a monitor to the serial output");
-    //const screen = b.addSystemCommand(&.{
-    //    "screen",
-    //    tty,
-    //    "115200",
-    //});
-    //monitor.dependOn(&screen.step);
+    const monitor = b.step("monitor", "Opens a monitor to the serial output");
+    const screen = b.addSystemCommand(&.{
+        "screen",
+        tty,
+        "115200",
+    });
+    monitor.dependOn(&screen.step);
 
     b.default_step.dependOn(&exe.step);
 }
